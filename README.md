@@ -45,14 +45,42 @@ The companion rule set that gets loaded into your AI agent's context window. Cov
 - Completion verification scans
 - Escalation triggers
 
+### [Examples & Templates](./examples/)
+
+**Audience:** Everyone. Copy these, adapt them, use them.
+
+Ready-to-use templates and filled-in samples for every document type referenced in the guides. All examples use a fictional "TaskFlow" SaaS project to demonstrate the patterns.
+
+```
+examples/
+├── VERSIONS.yaml                          # Version pinning file
+├── workspace-claude-md/
+│   ├── CLAUDE.md                          # Workspace-root agent instructions
+│   └── repo-specific-CLAUDE.md            # Per-repo agent instructions
+├── design/
+│   ├── HLD_TEMPLATE.md                    # High-Level Design template
+│   ├── SAMPLE_HLD.md                      # Filled-in HLD example
+│   └── llds/
+│       ├── LLD_TEMPLATE.md                # Low-Level Design template
+│       └── SAMPLE_LLD_01_Authentication.md
+├── stories/
+│   ├── EPIC_TEMPLATE.md                   # Epic/story template
+│   └── SAMPLE_EPIC_01_User_Auth.md        # Filled-in epic example
+└── agents/
+    ├── AGENT_TEMPLATE.md                  # Agent definition template
+    ├── SAMPLE_backend-api-agent.md        # Development agent example
+    └── SAMPLE_security-reviewer.md        # Review agent example
+```
+
 ---
 
 ## How to Use
 
 1. **Start with the Team Guide** to understand the overall framework and set up your project structure.
-2. **Adapt the Agent Instructions** to your project's specific rules, conventions, and tooling.
-3. **Place the adapted agent instructions** in your repository root (e.g., as `CLAUDE.md` for Claude Code) so they're loaded into agent context automatically.
-4. **Evolve both documents** as you discover new agent failure modes -- every violation is a rule waiting to be written.
+2. **Copy the templates** from `examples/` and fill them in for your project (HLD, LLDs, epics, agent definitions).
+3. **Adapt the Agent Instructions** to your project's specific rules, conventions, and tooling.
+4. **Place the adapted agent instructions** in your repository root (e.g., as `CLAUDE.md` for Claude Code) so they're loaded into agent context automatically.
+5. **Evolve all documents** as you discover new agent failure modes -- every violation is a rule waiting to be written.
 
 ---
 
