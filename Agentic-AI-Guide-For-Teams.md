@@ -27,11 +27,13 @@
 
 ### Why This Approach
 
-AI agents are powerful code generators but poor decision-makers. Left unguided, they produce plausible code that silently violates architectural invariants, swallows errors behind fallback values, and claims completion without verification. The practices in this guide exist to channel that power into reliable, high-quality output.
+AI agents are powerful generators — of code, designs, and documentation — but poor decision-makers. Left unguided, they produce plausible output that silently violates architectural invariants, swallows errors behind fallback values, and claims completion without verification. The practices in this guide exist to channel that power into reliable, high-quality output at every stage of the development lifecycle — from high-level design through implementation.
+
+**The human role is to direct and decide.** You provide the vision, constraints, and judgment calls. Agents do the heavy lifting of generating, structuring, and implementing — at every layer. You don't need to write HLDs, LLDs, or epics by hand; you need to tell the agent what to build, review what it produces, and own every decision.
 
 ### Core Principles
 
-1. **Design before implementation.** Agents execute plans well. They make architectural decisions poorly. Front-load all decisions into design documents and epics before any agent writes code.
+1. **Design before implementation.** Agents generate design documents and implementation plans well when given clear direction. They make architectural *decisions* poorly. Use agents to draft HLDs, LLDs, and epics — but the human must provide the direction, review the output, and own every decision.
 
 2. **One story at a time.** Agents lose coherence across large scopes. Constrain each agent session to a single story with clear acceptance criteria, validate fully, then move on.
 
@@ -120,26 +122,36 @@ Each definition includes: domain expertise, quality gates, fail-fast enforcement
 
 ## 3. The Design-to-Implementation Pipeline
 
-**The most important structural decision:** front-load all design work before agents touch code. Agents are excellent at implementing well-specified plans and terrible at making architectural choices on the fly.
+**The most important structural decision:** complete each design layer before moving to the next. Agents are excellent at generating structured documents and implementing well-specified plans. They are terrible at making architectural *decisions* on the fly. Use agents at every layer — but always with human direction and decision ownership.
 
 ### 3.1 Pipeline Overview
 
+**Every layer in this pipeline can and should be agent-generated,** with the human providing direction, making decisions, and validating the output.
+
 ```
 High-Level Design (HLD)
+  Agent generates from: human's system description, constraints, goals
+  Human owns: architecture decisions, component boundaries, non-negotiable constraints
   Defines: system architecture, component boundaries, interactions
     |
     v
 Low-Level Design (LLD) — per component
+  Agent generates from: HLD sections + human's component requirements
+  Human owns: interface decisions, algorithm choices, performance budget tradeoffs
   Defines: implementation details, interfaces, data structures, constraints
   References: specific HLD sections
     |
     v
 Epic — per implementation scope
+  Agent generates from: LLD sections + human's scope/priority decisions
+  Human owns: scope decisions, story prioritization, acceptance criteria approval
   Defines: 2-5 stories, all decisions pre-made, traceable to LLD sections
   Rule: targets ONE implementation domain only
     |
     v
 User Story — I.N.V.E.S.T. principles
+  Agent generates from: epic context + LLD traceability
+  Human owns: acceptance criteria sign-off, verification command approval
   Defines: acceptance criteria with verification commands
   Includes: official documentation URLs (versioned)
     |
@@ -151,27 +163,27 @@ Implementation — agent executes, human validates
 
 Without HLD/LLD, agents make contradictory architectural decisions across stories. Without epics, agents scope-creep or under-deliver. Without acceptance criteria, "done" is undefined.
 
-**The HLD** is your architecture contract. It answers: what are the components, how do they interact, what are the non-negotiable constraints (safety, latency, cost)?
+**The HLD** is your architecture contract. Tell the agent your system goals, constraints, and key components — it generates the document. You review and decide: are these the right boundaries? The right interactions? The right constraints? The agent structures; you approve.
 
-**The LLDs** are per-component blueprints. They answer: what data structures, what interfaces, what algorithms, what performance budgets? Each LLD references specific HLD sections for traceability.
+**The LLDs** are per-component blueprints. Point the agent at the relevant HLD sections and describe what the component needs to do — it generates the detailed design. You review and decide: are these the right interfaces? The right algorithms? The right performance budgets?
 
-**The Epics** are the bridge between design and implementation. They pre-make every decision the agent would otherwise guess at. Each epic maps to specific LLD sections with line numbers.
+**The Epics** are the bridge between design and implementation. Point the agent at the LLD sections and tell it to break the work into stories — it generates the epic with acceptance criteria and verification commands. You review and decide: is the scope right? Are the acceptance criteria sufficient? Are all decisions captured?
 
-**The Stories** are what the agent actually implements. Each story has concrete acceptance criteria with runnable verification commands.
+**The Stories** are what the agent implements. Each story has concrete acceptance criteria with runnable verification commands — generated in the epic, approved by you.
 
 ### 3.3 Decision Rule
 
-**ALL decisions must be in the epic before implementation begins.** If something is unclear during implementation: STOP > ASK THE USER > UPDATE THE EPIC > THEN CONTINUE. Agents should never make ad-hoc product or architecture decisions.
+**ALL decisions must be in the epic before implementation begins.** Agents generate the design documents and epics, but humans must review and approve every decision within them. If something is unclear during any stage — design, planning, or implementation — the agent must STOP > ASK THE USER > UPDATE THE DOCUMENT > THEN CONTINUE. Agents draft; humans decide.
 
 ### 3.4 Mapping to Scrum
 
 | Scrum Artifact | AI-Assisted Equivalent | Notes |
 |---------------|----------------------|-------|
-| Product Backlog | Epics derived from LLDs | Epics are pre-designed, not just "user wants X" |
+| Product Backlog | Epics derived from LLDs | Agent-generated from LLDs, human-approved |
 | Sprint Backlog | Stories selected from epics | 1-2 stories per agent session |
 | Sprint Goal | Epic completion | One epic per sprint is a good target |
 | Definition of Done | Completion verification framework | Scans + acceptance criteria proof + deploy validation |
-| Backlog Refinement | Epic writing with LLD traceability | The design work that makes agent execution effective |
+| Backlog Refinement | Agent-assisted epic generation from LLDs | Human provides scope/priority; agent drafts; human reviews |
 | Sprint Review | Completion reports with proof | Commands run, outputs shown, scans clean |
 
 ---
@@ -353,7 +365,7 @@ Merge
 
 ## 7. Story Execution Orchestration
 
-This is the operational core — how a single story moves from backlog to done.
+This is the operational core — how a single story moves from backlog to done. Note that by this point, the HLD, LLDs, and epics have already been agent-generated and human-approved. The story cycle is the execution phase.
 
 ### 7.1 The Story Cycle
 
@@ -428,7 +440,7 @@ When multiple agents (or parallel sessions) are active on the same project, coor
 
 ### 8.1 Epic Template
 
-Good epic templates encode your quality rules directly, so agents can't miss them.
+Good epic templates serve two purposes: they guide the agent that *generates* the epic (ensuring all required sections are filled in), and they guide the agent that later *implements* the stories (encoding quality rules directly so they can't be missed).
 
 **Essential sections in an epic template:**
 
@@ -465,7 +477,7 @@ Include this in every epic template so it's in context every time an agent works
 
 ### 8.4 Decision Documentation
 
-Every decision made during epic planning must be recorded in the epic itself with rationale. During implementation, if a new decision is needed, the agent stops and asks. The human decides and updates the epic. This creates a complete decision trail.
+Every decision must be recorded in the epic with rationale. When an agent generates an epic, it should flag any point where multiple valid approaches exist and present them to the human for decision — not pick one silently. The human decides, the agent records the decision and rationale in the epic. During implementation, if a new decision surfaces, the same rule applies: the agent stops and asks. This creates a complete decision trail where every judgment call is human-owned.
 
 ---
 
@@ -593,10 +605,11 @@ The most dangerous agent behavior is **confident incorrectness** — making a de
 | Review agents ignored | Blocking feels slow | Clear authority levels, advisory vs blocking distinction |
 | No deploy verification between stories | "I'll test everything at the end" | Mandatory build+deploy after every story |
 | Agent picks a design option without asking | Escalation triggers unclear | Explicit escalation trigger list in agent instructions |
+| Humans write all design docs manually | Underusing agent capabilities | Agents generate HLDs/LLDs/epics from templates; humans direct and decide |
 
 ### 12.3 Key Lessons
 
-1. **Front-load design.** Every hour spent on HLD/LLD/Epic saves 5+ hours of agent rework.
+1. **Front-load design — with agents.** Use agents to generate HLDs, LLDs, and epics from your direction. Every hour spent on agent-assisted design saves 5+ hours of implementation rework. You don't write these documents by hand — you direct, review, and decide.
 2. **Specificity beats volume.** One concrete "do X not Y" example beats a page of abstract principles.
 3. **Past violations are the best rules.** Document what went wrong and turn it into a rule with the specific grep/scan that would have caught it.
 4. **Agents don't remember across sessions.** Design your instruction files assuming every session starts fresh.
@@ -605,4 +618,4 @@ The most dangerous agent behavior is **confident incorrectness** — making a de
 
 ---
 
-*This guide is designed to be adapted. Remove what doesn't apply to your project, add your domain-specific rules, and evolve it as you learn what your agents get wrong. The companion document, **[Agentic-AI-Agent-Instructions.md](./Agentic-AI-Agent-Instructions.md)**, contains the rules that get loaded into agent context — maintain them in parallel.*
+*This guide is designed to be adapted. Remove what doesn't apply to your project, add your domain-specific rules, and evolve it as you learn what your agents get wrong. Use agents at every layer — design, planning, implementation, review — and reserve human effort for what only humans can do: providing direction, making decisions, and owning the outcome. The companion document, **[Agentic-AI-Agent-Instructions.md](./Agentic-AI-Agent-Instructions.md)**, contains the rules that get loaded into agent context — maintain them in parallel.*
