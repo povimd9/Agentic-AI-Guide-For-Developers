@@ -5,7 +5,7 @@
 **Implementation Domain:** <Frontend | Backend | Mobile | Infrastructure | CI-CD>
 **Assigned Team:** <Frontend Team | Backend Team | Mobile Team | Platform Team | DevOps>
 **LLD Reference:** [LLD #<XX> — <LLD Title>](../design/llds/LLD_<XX>_<filename>.md) (lines XXX-YYY)
-**Spec Reference:** [specs/api/<SPEC>.md](../../specs/api/<SPEC>.md) (section X.Y, lines XXX-YYY)
+**Spec Reference (REQUIRED for integrations/APIs/messaging):** [specs/api/<SPEC>.md](../../specs/api/<SPEC>.md) (section X.Y, lines XXX-YYY) OR `No spec yet; user approval required before implementation.`
 **PR Scope:** <Brief description of what this epic covers>
 **Estimated Complexity:** <Small/Medium/Large>
 **Story Count:** <2-5 stories (MAXIMUM)>
@@ -79,8 +79,9 @@ try {
 - NO migration paths, NO compatibility layers, NO version bridging.
 
 ### 7. MANDATORY Spec Compliance
-**If this epic involves API endpoints or WebSocket events:**
+**If this epic involves API endpoints, WebSocket events, or messaging/integration contracts:**
 - [ ] **Spec Reference Filled In:** The field above links to the relevant spec
+- [ ] **No Silent Guessing:** If no approved spec exists, stop and get user approval before implementation
 - [ ] **Field Names Copied from Spec:** Every field name in code matches spec exactly
 - [ ] **Spec Comment in Code:** Each handler has a comment citing spec file and lines
 

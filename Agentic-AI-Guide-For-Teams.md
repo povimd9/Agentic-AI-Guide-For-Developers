@@ -69,6 +69,24 @@ workspace-root/
 
 **Key rule:** The repo-specific file should say "Read the root instruction file first" at the top. Don't duplicate shared rules — reference them.
 
+#### Single-Repository Projects
+
+If your project is only one repository, use a single instruction file at that repo's root and keep both shared and repo-specific rules in that file. You do **not** need to invent a fake workspace root just to mirror the multi-repo pattern.
+
+Use the same sections described in this guide, but consolidate them into one document:
+
+```markdown
+# CLAUDE.md (single-repo example)
+
+1. Re-read this file at the start of every session
+2. Check `VERSIONS.yaml` before using libraries or APIs
+3. Follow fail-fast, no-placeholder, and verification rules below
+4. Build/test/deploy commands for this repository
+5. Repository-specific architecture and boundary rules
+```
+
+The examples in this repo show the layered multi-repo version because it scales better for shared workspaces, but the operating model is the same in a single repo: one source of truth for instructions, one version file, and explicit verification commands.
+
 ### 2.2 Version Pinning
 
 Maintain a central version file that lists every library, framework, and tool version used in the project. Agents' training data is outdated — this file is the source of truth.
@@ -376,6 +394,16 @@ Merge
 
 **Blocking reviews** must pass or the work goes back for fixes. **Advisory reviews** produce recommendations that are tracked but don't block.
 
+### 6.3 Automate the Repeatable Checks
+
+If your team uses CI, run the same placeholder scans, fail-fast scans, and story verification commands there in addition to local execution. The goal is not to replace human review; it is to make sure repeatable checks fail loudly before merge and catch drift between local runs and pull-request validation.
+
+At minimum:
+
+- Run the mandatory grep/scan suite on every PR.
+- Fail the pipeline when blocking checks find a violation.
+- Keep the CI commands identical to the commands documented in the instruction file and epic so there is one definition of "verified."
+
 ---
 
 ## 7. Story Execution Orchestration
@@ -493,6 +521,8 @@ Include this in every epic template so it's in context every time an agent works
 ### 8.4 Decision Documentation
 
 Every decision must be recorded in the epic with rationale. When an agent generates an epic, it should flag any point where multiple valid approaches exist and present them to the human for decision — not pick one silently. The human decides, the agent records the decision and rationale in the epic. During implementation, if a new decision surfaces, the same rule applies: the agent stops and asks. This creates a complete decision trail where every judgment call is human-owned.
+
+Use a lightweight decision-log entry when the rationale will be useful beyond a single epic update. The repository includes `examples/design/DECISION_LOG_TEMPLATE.md` as a reusable format for capturing context, options considered, explicit approval, and downstream impact.
 
 ---
 
