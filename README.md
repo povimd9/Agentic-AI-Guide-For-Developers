@@ -60,6 +60,7 @@ examples/
 ├── design/
 │   ├── HLD_TEMPLATE.md                    # High-Level Design template
 │   ├── SAMPLE_HLD.md                      # Filled-in HLD example
+│   ├── DECISION_LOG_TEMPLATE.md           # Decision/rationale template
 │   └── llds/
 │       ├── LLD_TEMPLATE.md                # Low-Level Design template
 │       └── SAMPLE_LLD_01_Authentication.md
@@ -82,6 +83,18 @@ examples/
 4. **Place the adapted agent instructions** in the location your coding agent expects (e.g., `CLAUDE.md`, `AGENTS.md`, or `.github/copilot-instructions.md`) so they're loaded into agent context automatically.
 5. **Evolve all documents** as you discover new agent failure modes -- every violation is a rule waiting to be written.
 
+### Quick Start
+
+If you want the fastest path to a working setup, start with one instruction file and one sample epic:
+
+1. Copy `examples/workspace-claude-md/CLAUDE.md` into the root of the workspace or repository your agent will edit.
+2. If you only have a single repository, keep the shared rules and repo-specific rules in that one file rather than splitting root vs. repo files.
+3. Copy `examples/VERSIONS.yaml` and replace the sample components, dependencies, and versions with your real stack.
+4. Use `examples/stories/SAMPLE_EPIC_01_User_Auth.md` as the reference for how traceable stories, verification commands, and fail-fast rules should look when filled in.
+5. Adapt `Agentic-AI-Agent-Instructions.md` to your environment, then place it where your platform auto-loads instructions.
+
+Expected outcome: the agent starts each session with explicit fail-fast rules, known version pins, and story-level verification commands instead of guessing.
+
 ---
 
 ## Content Review Snapshot
@@ -92,6 +105,17 @@ This repo content has been reviewed against four quality dimensions:
 - **Coverage:** Spans setup, planning, implementation workflow, validation gates, escalation, and common failure patterns.
 - **Sanity:** Companion documents are cross-referenced and aligned around the same fail-fast and verification-first operating model.
 - **Agnostic Usage:** Guidance is intended for any agent-enabled workflow; `CLAUDE.md` paths in examples are illustrative and can be mapped to your platform's instruction-file convention.
+
+### Verifying Your Adaptation
+
+Use this checklist after copying the templates into your own project:
+
+- [ ] Your instruction file explicitly tells the agent to re-read instructions at session start or after compression.
+- [ ] Your fail-fast section includes concrete scan commands for the patterns you consider forbidden.
+- [ ] Your `VERSIONS.yaml` matches the versions actually pinned in your codebase and deployment tooling.
+- [ ] Every epic references the relevant LLD sections with line numbers.
+- [ ] Every story acceptance criterion includes a runnable verification command with observable output.
+- [ ] Design or epic decisions that required human judgment are recorded with rationale instead of being left implicit.
 
 ---
 

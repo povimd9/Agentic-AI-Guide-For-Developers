@@ -18,6 +18,7 @@ examples/
 ├── design/
 │   ├── HLD_TEMPLATE.md                # High-Level Design template
 │   ├── SAMPLE_HLD.md                  # Filled-in HLD example
+│   ├── DECISION_LOG_TEMPLATE.md       # Design/planning decision log
 │   └── llds/
 │       ├── LLD_TEMPLATE.md            # Low-Level Design template
 │       └── SAMPLE_LLD_01_Authentication.md  # Filled-in LLD example
@@ -56,7 +57,7 @@ Story (What the agent implements in a single session)
 
 1. **Copy the template** for the document type you need.
 2. **Fill in your project-specific details** using the sample as a reference.
-3. **Maintain traceability** — every LLD references HLD sections, every epic references LLD sections with line numbers.
+3. **Maintain traceability** — every LLD references HLD sections, every epic references LLD sections with line numbers, and non-obvious decisions are captured with rationale.
 4. **Evolve continuously** — add rules to your instruction file when agents make mistakes, update VERSIONS.yaml when dependencies change.
 
 ---
