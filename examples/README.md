@@ -46,7 +46,7 @@ Story (What the agent implements in a single session)
 
 **Agent definitions** load domain knowledge from HLD/LLD references and enforce quality gates during implementation.
 
-**CLAUDE.md files** are the instruction files loaded into agent context at session start. They reference the design documents and contain the operational rules.
+**Instruction files** (shown in this repo as `CLAUDE.md` examples) are loaded into agent context at session start. They reference the design documents and contain the operational rules.
 
 **VERSIONS.yaml** is the single source of truth for all library/framework/tool versions used in the project.
 
@@ -57,7 +57,7 @@ Story (What the agent implements in a single session)
 1. **Copy the template** for the document type you need.
 2. **Fill in your project-specific details** using the sample as a reference.
 3. **Maintain traceability** — every LLD references HLD sections, every epic references LLD sections with line numbers.
-4. **Evolve continuously** — add rules to CLAUDE.md when agents make mistakes, update VERSIONS.yaml when dependencies change.
+4. **Evolve continuously** — add rules to your instruction file when agents make mistakes, update VERSIONS.yaml when dependencies change.
 
 ---
 
