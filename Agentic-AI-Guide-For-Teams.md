@@ -29,7 +29,9 @@
 
 AI agents are powerful generators — of code, designs, and documentation — but poor decision-makers. Left unguided, they produce plausible output that silently violates architectural invariants, swallows errors behind fallback values, and claims completion without verification. The practices in this guide exist to channel that power into reliable, high-quality output at every stage of the development lifecycle — from high-level design through implementation.
 
-**The human role is to direct and decide.** You provide the vision, constraints, and judgment calls. Agents do the heavy lifting of generating, structuring, and implementing — at every layer. You don't need to write HLDs, LLDs, or epics by hand; you need to tell the agent what to build, review what it produces, and own every decision.
+**The human role is to direct, review, and decide.** You provide the vision, constraints, and judgment calls. Agents do the heavy lifting of generating, structuring, and implementing — at every layer. You don't need to write HLDs, LLDs, or epics by hand; you need to tell the agent what to build, review what it produces, and own every decision.
+
+**Never assume an agent-generated deliverable is correct.** Agents produce plausible, well-structured output that can contain subtle errors: wrong assumptions baked into an HLD, missing failure modes in an LLD, acceptance criteria that don't actually prove the feature works. Every layer of agent output must be reviewed by a human who understands the domain well enough to catch what's wrong — not just confirm that it looks reasonable.
 
 ### Core Principles
 
@@ -171,11 +173,24 @@ Without HLD/LLD, agents make contradictory architectural decisions across storie
 
 **The Stories** are what the agent implements. Each story has concrete acceptance criteria with runnable verification commands — generated in the epic, approved by you.
 
-### 3.3 Decision Rule
+### 3.3 Mandatory Human Review at Every Layer
+
+**Agent output is a draft until a human approves it.** No layer's output should flow into the next without human review. This is not optional — skipping review at design layers compounds errors into implementation.
+
+| Layer | What the Human Must Verify | Common Agent Mistakes to Catch |
+|-------|---------------------------|-------------------------------|
+| **HLD** | Component boundaries make sense; constraints are correct and complete; nothing critical is missing from non-goals | Invents plausible-sounding components that aren't needed; omits constraints the human mentioned verbally but didn't write down; under-specifies security or multi-tenancy |
+| **LLD** | Interfaces match what consumers actually need; failure modes are realistic, not theoretical; performance budgets are achievable | Generates symmetrical/clean interfaces that don't match real usage patterns; lists failure modes without practical mitigations; copies performance numbers from training data instead of your actual constraints |
+| **Epic** | Stories cover all LLD requirements; acceptance criteria actually prove the feature works (not just exercise it); all decisions are captured with rationale | Writes acceptance criteria that test the happy path but miss edge cases; leaves implicit decisions undocumented ("obvious" choices that aren't obvious); generates verification commands that pass even when the feature is broken |
+| **Story** | Verification commands are runnable and meaningful; implementation tasks are complete; LLD traceability is correct | References wrong LLD sections; generates curl commands that test the wrong endpoint; omits tasks that are "obvious" but will be forgotten |
+
+**The review question at every layer is: "If I hand this to an agent that follows it literally, will the result be correct?"** If the answer is "only if the agent also understands X" — then X needs to be in the document.
+
+### 3.4 Decision Rule
 
 **ALL decisions must be in the epic before implementation begins.** Agents generate the design documents and epics, but humans must review and approve every decision within them. If something is unclear during any stage — design, planning, or implementation — the agent must STOP > ASK THE USER > UPDATE THE DOCUMENT > THEN CONTINUE. Agents draft; humans decide.
 
-### 3.4 Mapping to Scrum
+### 3.5 Mapping to Scrum
 
 | Scrum Artifact | AI-Assisted Equivalent | Notes |
 |---------------|----------------------|-------|
@@ -572,9 +587,11 @@ Define clear triggers for when the agent must stop and ask the human:
 | Task requires product/design decisions | Agent should ASK, not guess |
 | Implementation requires a new dependency | Human approves library choices; don't add without asking |
 
-### 11.2 The Anti-Pattern to Prevent
+### 11.2 The Anti-Patterns to Prevent
 
-The most dangerous agent behavior is **confident incorrectness** — making a decision, rationalizing it, and moving on. The escalation framework exists to convert these moments into human checkpoints.
+**On the agent side:** The most dangerous behavior is **confident incorrectness** — making a decision, rationalizing it, and moving on. The escalation framework exists to convert these moments into human checkpoints.
+
+**On the human side:** The most dangerous behavior is **uncritical approval** — glancing at agent output, seeing that it's well-structured and plausible, and approving it without verifying the substance. Agent-generated designs are especially dangerous because they *look* thorough. A polished HLD with clean diagrams and complete sections can still have wrong component boundaries. A detailed LLD can have interfaces that don't match what consumers actually need. An epic with well-formatted acceptance criteria can have verification commands that pass even when the feature is broken. Your review is the last line of defense before errors compound into the next layer.
 
 ---
 
@@ -606,6 +623,7 @@ The most dangerous agent behavior is **confident incorrectness** — making a de
 | No deploy verification between stories | "I'll test everything at the end" | Mandatory build+deploy after every story |
 | Agent picks a design option without asking | Escalation triggers unclear | Explicit escalation trigger list in agent instructions |
 | Humans write all design docs manually | Underusing agent capabilities | Agents generate HLDs/LLDs/epics from templates; humans direct and decide |
+| Rubber-stamping agent-generated designs | Agent output looks polished and complete | Review every layer critically — see §3.3 for what to check at each level |
 
 ### 12.3 Key Lessons
 
@@ -614,7 +632,8 @@ The most dangerous agent behavior is **confident incorrectness** — making a de
 3. **Past violations are the best rules.** Document what went wrong and turn it into a rule with the specific grep/scan that would have caught it.
 4. **Agents don't remember across sessions.** Design your instruction files assuming every session starts fresh.
 5. **Verify verify verify.** The completion verification framework is the single highest-ROI practice in this guide.
-6. **Evolve your instruction files continuously.** Every new agent mistake is a rule waiting to be written. The team guide and agent instruction file should grow after every sprint based on violations found — see §4.5.
+6. **Review is not optional — at any layer.** Agent-generated HLDs, LLDs, and epics look polished even when they contain wrong assumptions, missing failure modes, or acceptance criteria that don't actually prove anything. The more competent the output looks, the harder you must look for what's wrong. See §3.3.
+7. **Evolve your instruction files continuously.** Every new agent mistake is a rule waiting to be written. The team guide and agent instruction file should grow after every sprint based on violations found — see §4.5.
 
 ---
 
