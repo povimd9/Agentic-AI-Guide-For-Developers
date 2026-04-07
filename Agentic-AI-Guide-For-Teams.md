@@ -47,7 +47,7 @@ AI agents are powerful code generators but poor decision-makers. Left unguided, 
 
 ### 2.1 Instruction Files
 
-Every repository that an agent will work in needs an instruction file (e.g., `CLAUDE.md`) at its root. In a multi-repo workspace, use a layered approach:
+Every repository that an agent will work in needs an instruction file (for example `CLAUDE.md`, `AGENTS.md`, or a platform-specific file such as `.github/copilot-instructions.md`) at its root. In a multi-repo workspace, use a layered approach:
 
 ```
 workspace-root/
@@ -63,7 +63,7 @@ workspace-root/
 
 **Each repo's instruction file** contains repo-specific guidance: build commands, deployment steps, architecture context, boundary rules ("never modify code outside this repo"), and domain-specific conventions.
 
-**Key rule:** The repo-specific file should say "Read the root CLAUDE.md first" at the top. Don't duplicate shared rules — reference them.
+**Key rule:** The repo-specific file should say "Read the root instruction file first" at the top. Don't duplicate shared rules — reference them.
 
 ### 2.2 Version Pinning
 
@@ -111,6 +111,8 @@ If using specialized agents, store their role definitions alongside the codebase
   security-reviewer.md
   # ...
 ```
+
+Use whatever directory your platform supports for agent definitions; `.claude/agents/` is one concrete example.
 
 Each definition includes: domain expertise, quality gates, fail-fast enforcement examples, relevant design doc references, and authority level.
 

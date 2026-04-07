@@ -79,8 +79,19 @@ examples/
 1. **Start with the Team Guide** to understand the overall framework and set up your project structure.
 2. **Copy the templates** from `examples/` and fill them in for your project (HLD, LLDs, epics, agent definitions).
 3. **Adapt the Agent Instructions** to your project's specific rules, conventions, and tooling.
-4. **Place the adapted agent instructions** in your repository root (e.g., as `CLAUDE.md` for Claude Code) so they're loaded into agent context automatically.
+4. **Place the adapted agent instructions** in the location your coding agent expects (e.g., `CLAUDE.md`, `AGENTS.md`, or `.github/copilot-instructions.md`) so they're loaded into agent context automatically.
 5. **Evolve all documents** as you discover new agent failure modes -- every violation is a rule waiting to be written.
+
+---
+
+## Content Review Snapshot
+
+This repo content has been reviewed against four quality dimensions:
+
+- **Completeness:** Includes team playbook, agent rulebook, and end-to-end templates/samples for design, stories, versions, and agent roles.
+- **Coverage:** Spans setup, planning, implementation workflow, validation gates, escalation, and common failure patterns.
+- **Sanity:** Companion documents are cross-referenced and aligned around the same fail-fast and verification-first operating model.
+- **Agnostic Usage:** Guidance is intended for any agent-enabled workflow; `CLAUDE.md` paths in examples are illustrative and can be mapped to your platform's instruction-file convention.
 
 ---
 
